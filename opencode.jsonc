@@ -1,0 +1,20 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-3dec3e9c-c880-490b-849c-808c6dc553b3"
+      },
+      "enabled": true
+    },
+    "laravel-mcp-companion": {
+      "type": "local",
+      "command": ["python", "laravel_mcp_companion.py"],
+      "cwd": "C:\\Users\\Win11\\AppData\\Local\\laravel-mcp-companion",
+      "enabled": true,
+      "timeout": 30000
+    }
+  }
+}
