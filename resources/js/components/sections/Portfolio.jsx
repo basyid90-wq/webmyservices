@@ -8,7 +8,14 @@ export default function Portfolio({ projects, categories }) {
 
   const filtered = activeFilter === 'all'
     ? projects
-    : projects.filter((p) => p.category_slug === activeFilter)
+    : (() => {
+        console.log('=== FILTER DEBUG ===')
+        console.log('activeFilter:', activeFilter)
+        console.log('projects:', projects.map(p => ({ title: p.title, category: p.category, category_slug: p.category_slug, slug_type: typeof p.category_slug })))
+        const result = projects.filter((p) => p.category_slug === activeFilter)
+        console.log('filtered count:', result.length)
+        return result
+      })()
 
   return (
     <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">
