@@ -54,6 +54,7 @@ The public site is a single-page application built with **Inertia.js + React** a
 | 2.13 | **Cookie Consent** | `CookieBanner.jsx` + `useCookieConsent.js` | GDPR-compliant bottom banner with Essential (always on) and Analytics (opt-in) toggles. Saves preference to localStorage. Conditionally loads GTM/Meta Pixel only after analytics consent. Footer "Cookie Settings" link reopens banner. |
 | 2.15 | **Footer Enhancements** | `Footer.jsx` | Professional footer with SSM registration number (SSM: 202403295472 (RA0118450-H)), FAQ link, social media icons (LinkedIn, GitHub, Facebook), and dynamic payment gateway logos managed via Filament. Services column shows static text list of 6 services offered. Company column links: Portfolio, Maintenance, FAQ, Contact, Terms, Privacy, Cookie Settings. |
 | 2.16 | **Maintenance Plans** | `Maintenance.jsx` | Interactive pricing calculator page at `/maintenance`. Slider selects maintenance hours (10–50h). Left card shows traditional freelancer cost (hours × RM 150/h) with strikethrough pricing. Right card shows WebMy Services flat rate (RM 150/month). Auto-calculated savings banner: "Anda Jimat RM X!". Section B lists 6 included features with icons (SSL, uptime monitoring, security updates, analytics reports, Cloudflare CDN, WhatsApp support). CTA button to contact page. |
+| 2.17 | **Room Booking (Demo)** | `Booking/Catalog.jsx`, `Booking/Room.jsx`, `Booking/Summary.jsx`, `Booking/Checkout.jsx`, `Booking/Success.jsx` | Demo booking flow: Browse rooms with image cards → Room detail with calendar availability check → Booking summary → Checkout form (customer info, guest count) → Success page. Uses Bayarcash FPX payment. Supports blocked dates and overlapping booking detection. |
 
 **Design:** Dark theme (slate-900/950 background), indigo-400/500 accent, glassmorphism cards (bg-white/5 backdrop-blur), Framer Motion animations.
 
@@ -98,7 +99,14 @@ Accessible at `/admin`. Navigation groups:
 |------|-------------|
 | **Settings** | Custom Filament page for site-wide configuration (key-value) |
 
-#### 3.5 Dashboard Widgets
+#### 3.5 Booking (Demo) Group
+| Resource | Model | Description |
+|----------|-------|-------------|
+| **Rooms** | `Room` | CRUD with name, slug (auto from name, debounce 250ms), description (RichEditor), price_per_night (RM/night), max_guests (default 2), primary image (FileUpload, 1200×800px), gallery images (multiple FileUpload, 800×600px), amenities (TagsInput), is_active toggle, sort_order |
+| **Bookings** | `Booking` | List/manage bookings with booking number (HL-BKG-YYMMDDXXXX), room, customer info, check-in/out dates, adults/kids count, pricing (subtotal/discount/total), payment status (pending/paid/failed/cancelled), payment channel, transaction ID |
+| **Blocked Dates** | `BlockedDate` | CRUD to block specific dates per room with reason. Used for maintenance, holidays, or unavailable periods. |
+
+#### 3.6 Dashboard Widgets
 - `DashboardStats` – total projects, clients, invoices, contacts
 - `PerluRenew` – clients with expiring domain/hosting
 - `WpPluginOverdue` – WordPress plugin update status
@@ -178,6 +186,15 @@ id, key (unique), value (text), type, timestamps
 #### 5.15 `payment_logos`
 id, name, image (string path), is_active (bool), sort_order, timestamps
 
+#### 5.16 `rooms`
+id, name, slug (unique), description (text|null), price_per_night (decimal 10,2), max_guests (int, default 2), image (string|null), images (json|null), amenities (json|null), is_active (bool, default true), sort_order (int, default 0), timestamps
+
+#### 5.17 `blocked_dates`
+id, room_id (FK→rooms), date, reason (string|null), timestamps
+
+#### 5.18 `bookings`
+id, booking_number (unique, format HL-BKG-YYMMDDXXXX), room_id (FK→rooms), customer_name, customer_email, customer_phone, check_in, check_out, guests_adults (int), guests_kids (int, default 0), total_nights (int), subtotal (decimal), discount (decimal, default 0), total (decimal), status (pending/paid/failed/cancelled), payment_channel (string|null), transaction_id (string|null), paid_at (datetime|null), timestamps
+
 ---
 
 ### 6. ROUTES
@@ -197,12 +214,18 @@ id, name, image (string path), is_active (bool), sort_order, timestamps
 | GET | `/terms` | terms | Closure → Terms page |
 | GET | `/privacy` | privacy | Closure → Privacy page |
 | GET | `/maintenance` | maintenance | Closure → Maintenance page |
+| GET | `/booking` | booking.catalog | BookingController@catalog |
+| GET | `/booking/room/{room:slug}` | booking.room | BookingController@room |
+| POST | `/booking/availability/{room}` | booking.availability | BookingController@checkAvailability |
+| GET | `/booking/summary` | booking.summary | BookingController@summary |
+| POST | `/booking/checkout` | booking.checkout | BookingController@checkout |
+| GET | `/booking/orders/{booking:booking_number}/success` | booking.success | BookingController@success |
 
 #### Shop Routes (`routes/shop.php`)
 Catalog, Product, Cart CRUD, Checkout, Payment callback, Auth (login/register/logout), User dashboard (orders/tracking), Admin dashboard (orders/products/shipping/payments/coupons/customers)
 
 #### Admin Routes (Filament auto)
-`/admin` → Dashboard, `/admin/projects`, `/admin/clients`, `/admin/invoices`, `/admin/documents`, `/admin/services`, `/admin/testimonials`, `/admin/tech-stacks`, `/admin/project-categories`, `/admin/pricing-plans`, `/admin/contacts`, `/admin/shop/*`, `/admin/settings`
+`/admin` → Dashboard, `/admin/projects`, `/admin/clients`, `/admin/invoices`, `/admin/documents`, `/admin/services`, `/admin/testimonials`, `/admin/tech-stacks`, `/admin/project-categories`, `/admin/pricing-plans`, `/admin/contacts`, `/admin/rooms`, `/admin/bookings`, `/admin/blocked-dates`, `/admin/shop/*`, `/admin/settings`
 
 ---
 
@@ -220,4 +243,4 @@ Catalog, Product, Cart CRUD, Checkout, Payment callback, Auth (login/register/lo
 
 ---
 
-*Last updated: 21 Jun 2026*
+*Last updated: 22 Jun 2026*

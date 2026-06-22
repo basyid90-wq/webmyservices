@@ -24,19 +24,50 @@ class RoomResource extends Resource
         return $form->schema([
             Forms\Components\TextInput::make('name')
                 ->required()
-                ->live(onBlur: true)
+                ->placeholder('e.g. Deluxe Suite')
+                ->live(debounce: 250)
                 ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             Forms\Components\TextInput::make('slug')
                 ->required()
-                ->unique(ignoreRecord: true),
-            Forms\Components\RichEditor::make('description')->columnSpanFull(),
-            Forms\Components\TextInput::make('price_per_night')->numeric()->prefix('RM')->required(),
-            Forms\Components\TextInput::make('max_guests')->numeric()->default(2)->required(),
-            Forms\Components\FileUpload::make('image')->directory('rooms')->image(),
-            Forms\Components\FileUpload::make('images')->directory('rooms')->multiple()->image(),
-            Forms\Components\TagsInput::make('amenities'),
+                ->unique(ignoreRecord: true)
+                ->placeholder('auto-generated-from-name'),
+            Forms\Components\RichEditor::make('description')
+                ->placeholder('Describe the room...')
+                ->columnSpanFull(),
+            Forms\Components\TextInput::make('price_per_night')
+                ->numeric()
+                ->prefix('RM')
+                ->suffix('/night')
+                ->placeholder('0.00')
+                ->required(),
+            Forms\Components\TextInput::make('max_guests')
+                ->numeric()
+                ->default(2)
+                ->placeholder('2')
+                ->required(),
+            Forms\Components\FileUpload::make('image')
+                ->label('Primary Image')
+                ->disk('public')
+                ->directory('rooms')
+                ->image()
+                ->imagePreview()
+                ->helperText('Saiz disyorkan: 1200 x 800 px (landscape, JPG/PNG)'),
+            Forms\Components\FileUpload::make('images')
+                ->label('Gallery Images')
+                ->disk('public')
+                ->directory('rooms')
+                ->multiple()
+                ->image()
+                ->imagePreview()
+                ->helperText('Saiz disyorkan: 800 x 600 px (landscape, JPG/PNG)'),
+            Forms\Components\TagsInput::make('amenities')
+                ->placeholder('Type and press Enter to add')
+                ->hint('e.g. WiFi, Air Conditioning, TV, Mini Bar, Bathtub'),
             Forms\Components\Toggle::make('is_active')->default(true),
-            Forms\Components\TextInput::make('sort_order')->numeric()->default(0),
+            Forms\Components\TextInput::make('sort_order')
+                ->numeric()
+                ->default(0)
+                ->placeholder('0'),
         ]);
     }
 
