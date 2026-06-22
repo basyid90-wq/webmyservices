@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
@@ -29,3 +30,10 @@ Route::post('/documents/{document}/convert', [DocumentController::class, 'conver
 Route::get('/terms', function () { return Inertia::render('Terms'); })->name('terms');
 Route::get('/privacy', function () { return Inertia::render('Privacy'); })->name('privacy');
 Route::get('/maintenance', function () { return Inertia::render('Maintenance'); })->name('maintenance');
+
+Route::get('/booking', [BookingController::class, 'catalog'])->name('booking.catalog');
+Route::get('/booking/room/{room:slug}', [BookingController::class, 'room'])->name('booking.room');
+Route::post('/booking/availability/{room}', [BookingController::class, 'checkAvailability'])->name('booking.availability');
+Route::get('/booking/summary', [BookingController::class, 'summary'])->name('booking.summary');
+Route::post('/booking/checkout', [BookingController::class, 'checkout'])->name('booking.checkout');
+Route::get('/booking/orders/{booking:booking_number}/success', [BookingController::class, 'success'])->name('booking.success');
