@@ -34,6 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->darkMode(true)
             ->defaultThemeMode(ThemeMode::Dark)
             ->profile()
+            ->navigationGroups([
+                'Client Management',
+                'Frontend',
+                'Shop (Demo)',
+                'Booking (Demo)',
+                'Settings',
+            ])
             ->colors([
                 'primary' => Color::Indigo,
             ])
