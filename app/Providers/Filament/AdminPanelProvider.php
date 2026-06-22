@@ -34,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->darkMode(true)
             ->defaultThemeMode(ThemeMode::Dark)
             ->profile()
+            ->databaseNotifications()
             ->navigationGroups([
                 'Client Management',
                 'Frontend',

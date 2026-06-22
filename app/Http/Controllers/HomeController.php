@@ -8,6 +8,8 @@ use App\Models\ProjectCategory;
 use App\Models\Service;
 use App\Models\TechStack;
 use App\Models\Testimonial;
+use App\Models\User;
+use App\Notifications\NewInquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -57,6 +59,8 @@ class HomeController extends Controller
 
         \App\Models\Contact::create($validated);
 
+        User::first()?->notify(new NewInquiry('contact', $validated['name'], $validated['subject']));
+
         return redirect()->route('contact')->with('success', 'Thank you! Your message has been sent.');
     }
 
@@ -84,6 +88,8 @@ class HomeController extends Controller
         \App\Models\Contact::create($validated);
 
         \Illuminate\Support\Facades\Log::info('pricingInquiry saved successfully');
+
+        User::first()?->notify(new NewInquiry('pricing', $validated['name'], $validated['plan_name'], $validated['company_name'] ?? ''));
 
         return response()->json(['success' => true]);
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop\Cart;
 use App\Models\Shop\Order;
+use App\Models\User;
+use App\Notifications\NewOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -66,6 +68,8 @@ class CheckoutController extends Controller
             ]);
         }
 
+        User::first()?->notify(new NewOrder('new', $order->order_number, number_format($total, 2), $request->customer_name));
+
         // Also clear any server-side cart if exists
         $cart = \App\Models\Shop\Cart::where('session_id', session()->getId())->first();
         if ($cart) {
@@ -77,6 +81,7 @@ class CheckoutController extends Controller
         if (empty($token)) {
             $cart->items()->delete();
             $order->update(['status' => 'paid', 'transaction_id' => 'DEMO-' . strtoupper(uniqid()), 'paid_at' => now()]);
+            User::first()?->notify(new NewOrder('paid', $order->order_number, number_format($total, 2), $request->customer_name));
             return redirect()->route('shop.order.success', $order->order_number);
         }
 

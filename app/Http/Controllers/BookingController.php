@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Room;
+use App\Models\User;
+use App\Notifications\NewBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -139,10 +141,13 @@ class BookingController extends Controller
             'payment_channel' => Bayarcash::FPX,
         ]);
 
+        User::first()?->notify(new NewBooking('new', $booking->booking_number, $room->name, $validated['check_in'], $validated['check_out'], number_format($total, 2)));
+
         $token = config('bayarcash.api_token');
 
         if (empty($token)) {
             $booking->update(['status' => 'paid', 'transaction_id' => 'DEMO-' . strtoupper(uniqid()), 'paid_at' => now()]);
+            User::first()?->notify(new NewBooking('paid', $booking->booking_number, $room->name, $validated['check_in'], $validated['check_out']));
             return redirect()->route('booking.success', $booking->booking_number);
         }
 
