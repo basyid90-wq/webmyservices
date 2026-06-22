@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\TechStack;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -21,7 +22,10 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->latest()
             ->take(6)
-            ->get();
+            ->get()
+            ->each(function ($project) {
+                $project->category_slug = Str::slug($project->category);
+            });
         $testimonials = Testimonial::orderBy('sort_order')->get();
         $techStacks = TechStack::orderBy('sort_order')->get();
         $categories = ProjectCategory::orderBy('sort_order')->get();
