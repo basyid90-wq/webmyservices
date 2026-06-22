@@ -17,6 +17,7 @@ class RoomResource extends Resource
     protected static ?string $navigationGroup = 'Booking (Demo)';
     protected static ?string $navigationIcon = 'heroicon-o-home';
     protected static ?string $navigationLabel = 'Rooms';
+    protected static ?int $navigationSort = 40;
 
     public static function form(Form $form): Form
     {

@@ -32,6 +32,8 @@ class ClientResource extends Resource
 
     protected static ?string $navigationLabel = 'Clients Website';
 
+    protected static ?int $navigationSort = 10;
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'name';
