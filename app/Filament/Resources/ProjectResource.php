@@ -23,6 +23,8 @@ class ProjectResource extends Resource
 
     protected static ?string $navigationLabel = 'Our Portfolio';
 
+    protected static ?int $navigationSort = 5;
+
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
     protected static ?string $recordTitleAttribute = 'title';

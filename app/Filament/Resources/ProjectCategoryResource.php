@@ -18,6 +18,8 @@ class ProjectCategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'Kategori Portfolio';
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form

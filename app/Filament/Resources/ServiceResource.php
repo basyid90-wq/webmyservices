@@ -22,7 +22,7 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationLabel = 'Our Services';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
 

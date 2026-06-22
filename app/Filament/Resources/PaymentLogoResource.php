@@ -20,6 +20,8 @@ class PaymentLogoResource extends Resource
 
     protected static ?string $navigationLabel = 'Payment Logos';
 
+    protected static ?int $navigationSort = 8;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form

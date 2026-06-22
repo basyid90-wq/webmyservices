@@ -18,6 +18,8 @@ class DocumentResource extends Resource
 
     protected static ?string $navigationLabel = 'Sebutharga/Invoice/Resit';
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'doc_no';

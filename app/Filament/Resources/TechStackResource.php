@@ -18,6 +18,8 @@ class TechStackResource extends Resource
 
     protected static ?string $navigationLabel = 'Tech Stack';
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $navigationIcon = 'heroicon-o-cpu-chip';
 
     public static function form(Form $form): Form

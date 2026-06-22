@@ -17,6 +17,8 @@ class BlockedDateResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-x-circle';
     protected static ?string $navigationLabel = 'Blocked Dates';
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -44,3 +46,4 @@ class BlockedDateResource extends Resource
         ];
     }
 }
+

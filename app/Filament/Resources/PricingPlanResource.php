@@ -20,6 +20,8 @@ class PricingPlanResource extends Resource
 
     protected static ?string $navigationLabel = 'Pelan Harga';
 
+    protected static ?int $navigationSort = 7;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
