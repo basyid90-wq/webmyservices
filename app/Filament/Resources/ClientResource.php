@@ -30,6 +30,8 @@ class ClientResource extends Resource
 
     protected static ?string $navigationGroup = 'Client Management';
 
+    protected static ?string $navigationLabel = 'Clients Website';
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'name';

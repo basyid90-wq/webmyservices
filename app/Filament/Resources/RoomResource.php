@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class RoomResource extends Resource
 {
     protected static ?string $model = Room::class;
-    protected static ?string $navigationGroup = 'Booking';
+    protected static ?string $navigationGroup = 'Booking (Demo)';
     protected static ?string $navigationIcon = 'heroicon-o-home';
     protected static ?string $navigationLabel = 'Rooms';
 

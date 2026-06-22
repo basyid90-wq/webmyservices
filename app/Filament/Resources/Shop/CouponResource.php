@@ -14,8 +14,8 @@ class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
-    protected static ?string $navigationGroup = 'Shop';
-    protected static ?string $navigationLabel = 'Coupons';
+    protected static ?string $navigationGroup = 'Shop (Demo)';
+    protected static ?string $navigationLabel = 'Coupons (Demo)';
     protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form

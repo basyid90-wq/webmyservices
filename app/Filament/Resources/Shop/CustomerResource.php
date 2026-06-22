@@ -12,8 +12,8 @@ class CustomerResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Shop';
-    protected static ?string $navigationLabel = 'Customers';
+    protected static ?string $navigationGroup = 'Shop (Demo)';
+    protected static ?string $navigationLabel = 'User (Demo)';
     protected static ?int $navigationSort = 4;
 
     public static function table(Table $table): Table

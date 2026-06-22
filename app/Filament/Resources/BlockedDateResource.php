@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 class BlockedDateResource extends Resource
 {
     protected static ?string $model = BlockedDate::class;
-    protected static ?string $navigationGroup = 'Booking';
+    protected static ?string $navigationGroup = 'Booking (Demo)';
     protected static ?string $navigationIcon = 'heroicon-o-x-circle';
     protected static ?string $navigationLabel = 'Blocked Dates';
 

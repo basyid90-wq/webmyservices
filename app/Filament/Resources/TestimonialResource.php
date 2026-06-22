@@ -20,6 +20,8 @@ class TestimonialResource extends Resource
 
     protected static ?string $navigationGroup = 'Frontend';
 
+    protected static ?string $navigationLabel = 'Testimonials';
+
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
     protected static ?string $recordTitleAttribute = 'client_name';

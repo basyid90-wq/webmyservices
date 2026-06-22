@@ -16,7 +16,7 @@ class ProjectCategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Frontend';
 
-    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationLabel = 'Kategori Portfolio';
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 

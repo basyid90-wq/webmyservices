@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/logo-putih.png'))
             ->darkMode(true)
             ->defaultThemeMode(ThemeMode::Dark)
+            ->profile()
             ->colors([
                 'primary' => Color::Indigo,
             ])

@@ -20,6 +20,8 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Frontend';
 
+    protected static ?string $navigationLabel = 'Our Services';
+
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
     protected static ?string $recordTitleAttribute = 'title';

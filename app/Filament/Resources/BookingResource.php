@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
-    protected static ?string $navigationGroup = 'Booking';
+    protected static ?string $navigationGroup = 'Booking (Demo)';
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-    protected static ?string $navigationLabel = 'Bookings';
+    protected static ?string $navigationLabel = 'Bookings (Demo)';
 
     public static function form(Form $form): Form
     {

@@ -17,6 +17,8 @@ class ContactResource extends Resource
 
     protected static ?string $navigationGroup = 'Frontend';
 
+    protected static ?string $navigationLabel = 'Contacts';
+
     protected static ?string $navigationIcon = 'heroicon-o-envelope';
 
     protected static ?string $recordTitleAttribute = 'name';
