@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { router } from '@inertiajs/react'
 import { route } from '@/lib/ziggy'
 import ShopLayout from '@/components/Shop/ShopLayout'
 import useShopCart from '@/hooks/useShopCart'
@@ -9,6 +10,7 @@ export default function Product({ product, related }) {
 
   function addToCart() {
     addItem(product)
+    router.visit(route('shop.cart'))
   }
 
   return (
