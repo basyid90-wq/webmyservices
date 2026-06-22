@@ -8,7 +8,7 @@ export default function Portfolio({ projects, categories }) {
 
   const filtered = activeFilter === 'all'
     ? projects
-    : projects.filter((p) => p.category === activeFilter)
+    : projects.filter((p) => (p.category || '').trim().toLowerCase() === activeFilter.trim().toLowerCase())
 
   return (
     <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">

@@ -1,4 +1,4 @@
-import { ArrowLeft, Globe, Calendar } from 'lucide-react'
+import { ArrowLeft, Globe, Calendar, ExternalLink } from 'lucide-react'
 import { route } from '@/lib/ziggy'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
@@ -10,7 +10,7 @@ export default function ProjectDetail({ project }) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <a href={route('portfolio')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Kembali ke Portfolio
+            Back to Portfolio
           </a>
 
           {project.thumbnail && (
@@ -37,10 +37,10 @@ export default function ProjectDetail({ project }) {
                 Client: {project.client.name}
               </span>
             )}
-            {project.created_at && (
+            {project.completion_date && (
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
-                {new Date(project.created_at).getFullYear()}
+                {new Date(project.completion_date).getFullYear()}
               </span>
             )}
           </div>
@@ -51,12 +51,20 @@ export default function ProjectDetail({ project }) {
             </div>
           )}
 
-          <div className="mt-12 pt-8 border-t border-white/10 flex gap-4">
+          <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap gap-4">
+            {project.live_url && (
+              <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                <Button variant="primary">
+                  <ExternalLink className="w-4 h-4" />
+                  View Live Project
+                </Button>
+              </a>
+            )}
             <a href={route('contact')}>
-              <Button>Nak Projek Macam Ni?</Button>
+              <Button variant={project.live_url ? 'outline' : 'primary'}>Need a Project Like This?</Button>
             </a>
             <a href={route('portfolio')}>
-              <Button variant="outline">Lihat Projek Lain</Button>
+              <Button variant="outline">View Other Projects</Button>
             </a>
           </div>
         </div>

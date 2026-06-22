@@ -68,7 +68,13 @@ Sebelum guna mana-mana library/framework/package dalam code, **WAJIB rujuk dokum
 - Guna `edit` tool untuk modify existing files, bukan rewrite seluruh file
 - Bila create file baru, ikut naming convention sedia ada
 
-### 6. BEFORE SUBMITTING
+### 6. DEPLOYMENT RULES
+Apabila melibatkan arahan deployment ke VPS:
+- **JANGAN beri semua step sekaligus.** Beri 1 step, tunggu user sahkan "done", baru bagi step seterusnya.
+- Selepas setiap perubahan code, **WAJIB beritahu** apa yang perlu di-run di VPS (contoh: `git pull`, `composer install`, `npm run build`, `php artisan migrate`).
+- Semua code wajib di-push ke GitHub repo `basyid90-wq/webmyservices` (private) selepas perubahan.
+
+### 7. BEFORE SUBMITTING
 - Run `npm run build` untuk frontend changes
 - Run `php artisan optimize:clear` untuk backend changes
 - Test flow dari user perspective secara mental
