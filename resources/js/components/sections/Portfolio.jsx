@@ -8,14 +8,7 @@ export default function Portfolio({ projects, categories }) {
 
   const filtered = activeFilter === 'all'
     ? projects
-    : (() => {
-        if (activeFilter === 'e-commerce') {
-          console.log('=== DEBUG: E-Commerce Filter ===')
-          console.log('categories:', categories.map(c => ({ name: c.name, slug: c.slug })))
-          console.log('projects:', projects.map(p => ({ title: p.title, category: p.category, category_slug: p.category_slug })))
-        }
-        return projects.filter((p) => p.category_slug === activeFilter)
-      })()
+    : projects.filter((p) => p.category_slug === activeFilter)
 
   return (
     <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">
@@ -91,7 +84,7 @@ All
           </AnimatePresence>
         </div>
 
-        {projects.length >= 6 && (
+        {projects.length >= 12 && (
           <div className="text-center mt-12">
             <a
               href={route('portfolio')}

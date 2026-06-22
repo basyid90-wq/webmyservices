@@ -21,7 +21,7 @@ class HomeController extends Controller
             ->with('client')
             ->orderBy('sort_order')
             ->latest()
-            ->take(6)
+            ->take(12)
             ->get()
             ->each(function ($project) {
                 $project->category_slug = Str::slug($project->category);
