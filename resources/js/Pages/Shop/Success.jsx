@@ -1,8 +1,15 @@
+import { useEffect } from 'react'
 import { route } from '@/lib/ziggy'
 import ShopLayout from '@/components/Shop/ShopLayout'
+import useShopCart from '@/hooks/useShopCart'
 import { CheckCircle, ArrowRight, Package } from 'lucide-react'
 
 export default function Success({ order }) {
+  const { clearCart } = useShopCart()
+
+  useEffect(() => {
+    clearCart()
+  }, [])
   return (
     <ShopLayout>
       <div className="max-w-lg mx-auto px-4 py-16 lg:py-24 text-center">

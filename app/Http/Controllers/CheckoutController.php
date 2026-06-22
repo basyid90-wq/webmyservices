@@ -14,21 +14,11 @@ class CheckoutController extends Controller
 {
     public function show()
     {
-        $cart = $this->getCart()->load('items.product');
-        if ($cart->items->isEmpty()) {
-            return redirect()->route('shop.catalog');
-        }
-
-        return Inertia::render('Shop/Checkout', ['cart' => $cart]);
+        return Inertia::render('Shop/Checkout');
     }
 
     public function process(Request $request)
     {
-        $cart = $this->getCart()->load('items.product');
-        if ($cart->items->isEmpty()) {
-            return back()->withErrors(['message' => 'Cart is empty.']);
-        }
-
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
@@ -38,11 +28,16 @@ class CheckoutController extends Controller
             'shipping_state' => 'required|string|max:100',
             'shipping_postcode' => 'required|string|max:10',
             'payment_channel' => 'required|in:2,3',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|integer',
+            'items.*.name' => 'required|string',
+            'items.*.price' => 'required|numeric',
+            'items.*.quantity' => 'required|integer|min:1',
         ]);
 
-        $subtotal = $cart->items->sum(fn ($i) => $i->product->price * $i->quantity);
-        $shipping = $subtotal > 100 ? 0 : 10;
-        $total = $subtotal + $shipping;
+        $subtotal = collect($request->items)->sum(fn ($i) => $i['price'] * $i['quantity']);
+        $shipping = $request->input('cart_shipping', $subtotal > 100 ? 0 : 10);
+        $total = $request->input('cart_total', $subtotal + $shipping);
 
         $order = Order::create([
             'user_id' => Auth::id(),
@@ -61,17 +56,21 @@ class CheckoutController extends Controller
             'payment_channel' => $request->payment_channel === '2' ? Bayarcash::FPX : Bayarcash::FPX,
         ]);
 
-        foreach ($cart->items as $cartItem) {
+        foreach ($request->items as $item) {
             $order->items()->create([
-                'shop_product_id' => $cartItem->shop_product_id,
-                'product_name' => $cartItem->product->name,
-                'price' => $cartItem->product->price,
-                'quantity' => $cartItem->quantity,
-                'subtotal' => $cartItem->product->price * $cartItem->quantity,
+                'shop_product_id' => $item['product_id'],
+                'product_name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'subtotal' => $item['price'] * $item['quantity'],
             ]);
         }
 
-        $cart->items()->delete();
+        // Also clear any server-side cart if exists
+        $cart = \App\Models\Shop\Cart::where('session_id', session()->getId())->first();
+        if ($cart) {
+            $cart->items()->delete();
+        }
 
         $token = config('bayarcash.api_token');
 

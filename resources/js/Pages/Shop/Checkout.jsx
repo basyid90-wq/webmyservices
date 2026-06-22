@@ -17,8 +17,25 @@ export default function Checkout({ errors, csrf_token }) {
           <div className="mb-6 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">{errors.payment}</div>
         )}
 
+        {cart.items.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-slate-500">Your cart is empty.</p>
+            <a href={route('shop.catalog')} className="text-cyan-500 text-sm mt-2 inline-block">Back to Shop</a>
+          </div>
+        ) : (
         <form method="POST" action={route('shop.checkout.process')} acceptCharset="UTF-8">
           <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
+          <input type="hidden" name="cart_subtotal" value={subtotal} />
+          <input type="hidden" name="cart_shipping" value={shipping} />
+          <input type="hidden" name="cart_total" value={total} />
+          {cart.items.map((item, i) => (
+            <span key={i}>
+              <input type="hidden" name={`items[${i}][product_id]`} value={item.product_id} />
+              <input type="hidden" name={`items[${i}][name]`} value={item.name} />
+              <input type="hidden" name={`items[${i}][price]`} value={item.price} />
+              <input type="hidden" name={`items[${i}][quantity]`} value={item.quantity} />
+            </span>
+          ))}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
@@ -110,6 +127,7 @@ export default function Checkout({ errors, csrf_token }) {
             </div>
           </div>
         </form>
+        )}
       </div>
     </ShopLayout>
   )
