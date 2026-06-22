@@ -73,10 +73,12 @@ Sebelum guna mana-mana library/framework/package dalam code, **WAJIB rujuk dokum
 - Bila create file baru, ikut naming convention sedia ada
 
 ### 7. DEPLOYMENT RULES
-- Proses build & deployment kini **automatik sepenuhnya melalui GitHub Actions (CI/CD)**.
-- Setiap perubahan kod **WAJIB di-push terus ke GitHub** selepas selesai.
-- **JANGAN berikan arahan manual untuk VPS** (seperti `git pull`, `npm run build`, `composer install`, `php artisan migrate`) — GitHub Actions akan uruskan secara automatik.
-- **HANYA berikan arahan VPS** jika melibatkan konfigurasi root server yang GitHub Actions tak boleh capai (contoh: Nginx server block, create database baru, SSL cert).
+- **Default**: Proses build & deployment **diuruskan automatik oleh GitHub Actions (CI/CD)**. Setiap perubahan kod **WAJIB di-push terus ke GitHub** selepas selesai, dan CI/CD akan uruskan `git pull`, `composer install`, `npm run build`, `php artisan migrate`, `php artisan optimize:clear` dan seumpamanya secara automatik di VPS.
+- **JANGAN berikan arahan VPS secara default** — kecuali dalam situasi berikut:
+  - CI/CD workflow **tidak wujud** atau **gagal** (build error, timeout, etc.)
+  - Perubahan memerlukan konfigurasi root server yang CI/CD tak capai (contoh: Nginx server block, create database, SSL cert, `storage:link`, file permission)
+  - User secara eksplisit bertanya "apa perlu update di VPS?"
+- **Jika perlu arahan VPS**, berikan command yang lengkap dan jelas dalam satu blok (bash).
 
 ### 8. BEFORE SUBMITTING
 - Run `npm run build` untuk frontend changes
@@ -85,4 +87,4 @@ Sebelum guna mana-mana library/framework/package dalam code, **WAJIB rujuk dokum
 
 ---
 
-*Last updated: 21 Jun 2026*
+*Last updated: 22 Jun 2026*
