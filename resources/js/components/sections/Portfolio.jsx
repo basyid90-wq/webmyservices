@@ -8,7 +8,14 @@ export default function Portfolio({ projects, categories }) {
 
   const filtered = activeFilter === 'all'
     ? projects
-    : projects.filter((p) => p.category_slug === activeFilter)
+    : (() => {
+        if (activeFilter === 'e-commerce') {
+          console.log('=== DEBUG: E-Commerce Filter ===')
+          console.log('categories:', categories.map(c => ({ name: c.name, slug: c.slug })))
+          console.log('projects:', projects.map(p => ({ title: p.title, category: p.category, category_slug: p.category_slug })))
+        }
+        return projects.filter((p) => p.category_slug === activeFilter)
+      })()
 
   return (
     <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">
