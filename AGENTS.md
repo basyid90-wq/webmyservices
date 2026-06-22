@@ -62,19 +62,23 @@ Sebelum guna mana-mana library/framework/package dalam code, **WAJIB rujuk dokum
 
 **RULE:** JANGAN agak-agak atau guna training data lama. Sentiasa verify dengan documentation terkini.
 
-### 5. CODE STYLE
+### 5. LANGUAGE RULE
+- Semua penulisan kod, struktur database, nama fail, nama class, dan teks komponen UI **mesti menggunakan standard Bahasa Inggeris**.
+- Semua bentuk analisis, perancangan, penjelasan teknikal, dan komunikasi dengan user **WAJIB 100% dalam Bahasa Melayu**.
+
+### 6. CODE STYLE
 - Ikut coding style sedia ada dalam project
 - JANGAN tulis comments kecuali diminta
 - Guna `edit` tool untuk modify existing files, bukan rewrite seluruh file
 - Bila create file baru, ikut naming convention sedia ada
 
-### 6. DEPLOYMENT RULES
-Apabila melibatkan arahan deployment ke VPS:
-- **JANGAN beri semua step sekaligus.** Beri 1 step, tunggu user sahkan "done", baru bagi step seterusnya.
-- Selepas setiap perubahan code, **WAJIB beritahu** apa yang perlu di-run di VPS (contoh: `git pull`, `composer install`, `npm run build`, `php artisan migrate`).
-- Semua code wajib di-push ke GitHub repo `basyid90-wq/webmyservices` (private) selepas perubahan.
+### 7. DEPLOYMENT RULES
+- Proses build & deployment kini **automatik sepenuhnya melalui GitHub Actions (CI/CD)**.
+- Setiap perubahan kod **WAJIB di-push terus ke GitHub** selepas selesai.
+- **JANGAN berikan arahan manual untuk VPS** (seperti `git pull`, `npm run build`, `composer install`, `php artisan migrate`) — GitHub Actions akan uruskan secara automatik.
+- **HANYA berikan arahan VPS** jika melibatkan konfigurasi root server yang GitHub Actions tak boleh capai (contoh: Nginx server block, create database baru, SSL cert).
 
-### 7. BEFORE SUBMITTING
+### 8. BEFORE SUBMITTING
 - Run `npm run build` untuk frontend changes
 - Run `php artisan optimize:clear` untuk backend changes
 - Test flow dari user perspective secara mental
