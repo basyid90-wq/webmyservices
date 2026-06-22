@@ -50,7 +50,6 @@ class RoomResource extends Resource
                 ->disk('public')
                 ->directory('rooms')
                 ->image()
-                ->imagePreview()
                 ->helperText('Saiz disyorkan: 1200 x 800 px (landscape, JPG/PNG)'),
             Forms\Components\FileUpload::make('images')
                 ->label('Gallery Images')
@@ -58,7 +57,6 @@ class RoomResource extends Resource
                 ->directory('rooms')
                 ->multiple()
                 ->image()
-                ->imagePreview()
                 ->helperText('Saiz disyorkan: 800 x 600 px (landscape, JPG/PNG)'),
             Forms\Components\TagsInput::make('amenities')
                 ->placeholder('Type and press Enter to add')
