@@ -26,9 +26,9 @@ class ShopAuthController extends Controller
             $request->session()->regenerate();
             $email = $request->input('email');
             if (str_contains($email, 'admin')) {
-                return redirect()->intended(route('shop.admin.dashboard'));
+                return redirect()->route('shop.admin.dashboard');
             }
-            return redirect()->intended(route('shop.dashboard'));
+            return redirect()->route('shop.dashboard');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);

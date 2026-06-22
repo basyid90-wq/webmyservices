@@ -22,8 +22,13 @@ class ProductResource extends Resource
     {
         return $form->schema([
             Forms\Components\Select::make('shop_category_id')->relationship('category', 'name')->required(),
-            Forms\Components\TextInput::make('name')->required(),
-            Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
+            Forms\Components\TextInput::make('name')
+                ->required()
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn ($state, $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+            Forms\Components\TextInput::make('slug')
+                ->required()
+                ->unique(ignoreRecord: true),
             Forms\Components\RichEditor::make('description')->columnSpanFull(),
             Forms\Components\TextInput::make('price')->numeric()->prefix('RM')->required(),
             Forms\Components\TextInput::make('compare_price')->numeric()->prefix('RM'),

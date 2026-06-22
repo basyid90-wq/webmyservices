@@ -48,8 +48,8 @@ export default function Product({ product, related }) {
 
             {product.description && (
               <div className="text-sm text-slate-600 leading-relaxed mb-6">
-                <h3 className="font-semibold text-slate-800 mb-2">Deskripsi</h3>
-                <p>{product.description}</p>
+                <h3 className="font-semibold text-slate-800 mb-2">Huraian Produk</h3>
+                <div dangerouslySetInnerHTML={{ __html: product.description }} />
               </div>
             )}
 
