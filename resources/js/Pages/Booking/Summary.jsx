@@ -1,13 +1,10 @@
-import { useForm } from '@inertiajs/react'
 import { route } from '@/lib/ziggy'
 import BookingLayout from '@/components/Booking/BookingLayout'
 import { Calendar, Users, Moon } from 'lucide-react'
 
 export default function Summary({ room, checkIn, checkOut, guestsAdults, guestsKids, nights, subtotal }) {
-  const { post, processing } = useForm({})
-
   function proceed() {
-    post(route('booking.checkout'), {
+    const params = new URLSearchParams({
       room_id: room.id,
       check_in: checkIn,
       check_out: checkOut,
@@ -15,10 +12,9 @@ export default function Summary({ room, checkIn, checkOut, guestsAdults, guestsK
       guests_kids: guestsKids,
       nights,
       subtotal,
-      customer_name: '',
-      customer_email: '',
-      customer_phone: '',
+      room_name: room.name,
     })
+    window.location.href = route('booking.checkout') + '?' + params.toString()
   }
 
   return (
@@ -50,9 +46,9 @@ export default function Summary({ room, checkIn, checkOut, guestsAdults, guestsK
           </div>
         </div>
 
-        <button onClick={proceed} disabled={processing}
-          className="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-medium text-sm transition-colors disabled:opacity-50">
-          {processing ? 'Processing...' : 'Proceed to Payment'}
+        <button onClick={proceed}
+          className="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-medium text-sm transition-colors">
+          Proceed to Payment
         </button>
       </div>
     </BookingLayout>

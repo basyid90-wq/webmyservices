@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { router } from '@inertiajs/react'
 import { motion } from 'framer-motion'
 import { route } from '@/lib/ziggy'
 import axios from 'axios'
@@ -126,6 +125,10 @@ export default function Room({ room, blockedDates, bookedDates }) {
                   className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
                   <p className="text-emerald-700 text-sm font-medium">Available! {availability.nights} night{availability.nights > 1 ? 's' : ''}</p>
                   <p className="text-xl font-bold text-emerald-800 mt-1">RM {availability.subtotal}</p>
+                  <button onClick={book}
+                    className="mt-3 w-full bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">
+                    Book Now — RM {availability.subtotal}
+                  </button>
                 </motion.div>
               )}
 

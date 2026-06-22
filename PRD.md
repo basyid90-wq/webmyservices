@@ -218,7 +218,8 @@ id, booking_number (unique, format HL-BKG-YYMMDDXXXX), room_id (FK→rooms), cus
 | GET | `/booking/room/{room:slug}` | booking.room | BookingController@room |
 | POST | `/booking/availability/{room}` | booking.availability | BookingController@checkAvailability |
 | GET | `/booking/summary` | booking.summary | BookingController@summary |
-| POST | `/booking/checkout` | booking.checkout | BookingController@checkout |
+| GET | `/booking/checkout` | booking.checkout | Closure → Checkout page |
+| POST | `/booking/checkout` | booking.checkout.submit | BookingController@checkout |
 | GET | `/booking/orders/{booking:booking_number}/success` | booking.success | BookingController@success |
 
 #### Shop Routes (`routes/shop.php`)

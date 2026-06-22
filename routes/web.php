@@ -35,5 +35,8 @@ Route::get('/booking', [BookingController::class, 'catalog'])->name('booking.cat
 Route::get('/booking/room/{room:slug}', [BookingController::class, 'room'])->name('booking.room');
 Route::post('/booking/availability/{room}', [BookingController::class, 'checkAvailability'])->name('booking.availability');
 Route::get('/booking/summary', [BookingController::class, 'summary'])->name('booking.summary');
-Route::post('/booking/checkout', [BookingController::class, 'checkout'])->name('booking.checkout');
+Route::get('/booking/checkout', function (\Illuminate\Http\Request $request) {
+    return \Inertia\Inertia::render('Booking/Checkout');
+})->name('booking.checkout');
+Route::post('/booking/checkout', [BookingController::class, 'checkout'])->name('booking.checkout.submit');
 Route::get('/booking/orders/{booking:booking_number}/success', [BookingController::class, 'success'])->name('booking.success');

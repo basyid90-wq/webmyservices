@@ -20,7 +20,7 @@ export default function Checkout({ errors }) {
 
         {errors?.dates && <div className="mb-6 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">{errors.dates}</div>}
 
-        <form method="POST" action={route('booking.checkout')} acceptCharset="UTF-8">
+        <form method="POST" action={route('booking.checkout.submit')} acceptCharset="UTF-8">
           <input type="hidden" name="_token" value={typeof document !== 'undefined' ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' : ''} />
           <input type="hidden" name="room_id" value={roomId} />
           <input type="hidden" name="check_in" value={checkIn} />
