@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Image } from 'lucide-react'
 import { route } from '@/lib/ziggy'
 
+function slugify(text) {
+  return (text || '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+}
+
 export default function Portfolio({ projects, categories }) {
   const [activeFilter, setActiveFilter] = useState('all')
 
   const filtered = activeFilter === 'all'
     ? projects
-    : projects.filter((p) => (p.category || '').trim().toLowerCase() === activeFilter.trim().toLowerCase())
+    : projects.filter((p) => slugify(p.category) === activeFilter)
 
   return (
     <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">
@@ -33,9 +37,9 @@ All
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveFilter(cat.name)}
+              onClick={() => setActiveFilter(cat.slug)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeFilter === cat.name ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                activeFilter === cat.slug ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
               {cat.name}
