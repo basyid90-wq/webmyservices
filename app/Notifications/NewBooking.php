@@ -20,7 +20,7 @@ class NewBooking extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'telegram'];
     }
 
     public function toDatabase($notifiable): array
@@ -34,5 +34,17 @@ class NewBooking extends Notification
             'icon' => $icons[$this->type] ?? '🏡',
             'type' => 'booking',
         ];
+    }
+
+    public function toTelegram($notifiable): array|string
+    {
+        $icons = ['new' => '🏡', 'paid' => '✅', 'cancelled' => '❌'];
+        $labels = ['new' => '*Tempahan Baru*', 'paid' => '*Bayaran Tempahan Diterima*', 'cancelled' => '*Tempahan Dibatalkan*'];
+
+        return ['text' => ($icons[$this->type] ?? '🏡') . ' ' . ($labels[$this->type] ?? 'Tempahan')
+            . "\nNo: #{$this->bookingNumber}"
+            . "\nBilik: {$this->roomName}"
+            . "\nTarikh: {$this->checkIn} → {$this->checkOut}"
+            . ($this->total ? "\nJumlah: RM {$this->total}" : '')];
     }
 }

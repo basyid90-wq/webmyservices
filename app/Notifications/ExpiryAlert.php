@@ -19,7 +19,7 @@ class ExpiryAlert extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'telegram'];
     }
 
     public function toDatabase($notifiable): array
@@ -41,5 +41,18 @@ class ExpiryAlert extends Notification
             'icon' => $icons[$this->level] ?? '⚠️',
             'type' => 'expiry_alert',
         ];
+    }
+
+    public function toTelegram($notifiable): array|string
+    {
+        $icons = ['critical' => '💀', 'warning' => '🔴', 'soon' => '⚠️', 'plugin' => '🔌'];
+        $lines = [($icons[$this->level] ?? '⚠️') . ' *Amaran Sistem*'];
+        $lines[] = "Client: {$this->clientName}";
+        $lines[] = "{$this->itemName}";
+        if ($this->expiryDate && $this->level !== 'plugin') {
+            $lines[] = "Tamat: {$this->expiryDate}";
+        }
+
+        return ['text' => implode("\n", $lines)];
     }
 }

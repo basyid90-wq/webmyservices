@@ -18,7 +18,7 @@ class NewInquiry extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'telegram'];
     }
 
     public function toDatabase($notifiable): array
@@ -34,5 +34,16 @@ class NewInquiry extends Notification
             'icon' => $icon,
             'type' => 'inquiry',
         ];
+    }
+
+    public function toTelegram($notifiable): array|string
+    {
+        $icon = $this->type === 'pricing' ? '🔔' : '📧';
+        $lines = ["{$icon} *Inquiry Baru*"];
+        $lines[] = "Nama: {$this->name}";
+        if ($this->company) $lines[] = "Syarikat: {$this->company}";
+        $lines[] = $this->type === 'pricing' ? "Pakej: {$this->planOrSubject}" : "Subjek: {$this->planOrSubject}";
+
+        return ['text' => implode("\n", $lines)];
     }
 }

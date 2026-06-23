@@ -18,7 +18,7 @@ class NewOrder extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'telegram'];
     }
 
     public function toDatabase($notifiable): array
@@ -32,5 +32,16 @@ class NewOrder extends Notification
             'icon' => $icons[$this->type] ?? '🛍️',
             'type' => 'shop_order',
         ];
+    }
+
+    public function toTelegram($notifiable): array|string
+    {
+        $icons = ['new' => '🛍️', 'paid' => '✅', 'cancelled' => '❌'];
+        $labels = ['new' => '*Pesanan Baru*', 'paid' => '*Bayaran Diterima*', 'cancelled' => '*Pesanan Dibatalkan*'];
+
+        return ['text' => ($icons[$this->type] ?? '🛍️') . ' ' . ($labels[$this->type] ?? 'Pesanan')
+            . "\nNo: #{$this->orderNumber}"
+            . "\nJumlah: RM {$this->total}"
+            . "\nPelanggan: {$this->customerName}"];
     }
 }
