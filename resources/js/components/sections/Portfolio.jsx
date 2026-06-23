@@ -1,41 +1,122 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Image } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Image, FolderOpen } from 'lucide-react'
 import { route } from '@/lib/ziggy'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
+
+function ProjectCard({ project, isActive }) {
+  return (
+    <motion.a
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      href={route('project.detail', { project: project.slug })}
+      className="block group"
+    >
+      <div
+        className={`relative overflow-hidden rounded-2xl bg-gray-900 border transition-all duration-500 ${
+          isActive
+            ? 'border-indigo-500/40 shadow-xl shadow-indigo-500/10 scale-100 opacity-100'
+            : 'border-gray-800 scale-[0.92] opacity-50 hover:opacity-80'
+        }`}
+      >
+        <div className="relative overflow-hidden aspect-[16/10] bg-gray-800">
+          {project.thumbnail ? (
+            <img
+              src={`/storage/${project.thumbnail}`}
+              alt={project.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-600">
+              <Image className="w-16 h-16" />
+            </div>
+          )}
+          <span className="absolute top-3 left-3 bg-indigo-600/90 backdrop-blur text-white text-xs font-semibold px-3 py-1 rounded-full tracking-wide">
+            {project.category}
+          </span>
+          {isActive && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"
+            />
+          )}
+        </div>
+        <div className="p-5">
+          <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-indigo-400 transition-colors">
+            {project.title}
+          </h3>
+          {project.client && (
+            <p className="text-sm text-gray-500">{project.client.name}</p>
+          )}
+        </div>
+      </div>
+    </motion.a>
+  )
+}
 
 export default function Portfolio({ projects, categories }) {
   const [activeFilter, setActiveFilter] = useState('all')
+  const swiperRef = useRef(null)
 
   const filtered = activeFilter === 'all'
     ? projects
     : projects.filter((p) => p.category_slug === activeFilter)
 
+  const goNext = () => swiperRef.current?.swiper?.slideNext()
+  const goPrev = () => swiperRef.current?.swiper?.slidePrev()
+
+  const handleFilterChange = (slug) => {
+    setActiveFilter(slug)
+    setTimeout(() => {
+      swiperRef.current?.swiper?.update()
+      swiperRef.current?.swiper?.slideTo(0, 300)
+    }, 50)
+  }
+
   return (
-    <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30">
+    <section id="portfolio" className="py-24 lg:py-32 bg-slate-900/30 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
           <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Our Work</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Portfolio</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Some of the projects we have delivered for our clients.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
           <button
-            onClick={() => setActiveFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeFilter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+            onClick={() => handleFilterChange('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+              activeFilter === 'all'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
             }`}
           >
-All
+            All
           </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveFilter(cat.slug)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeFilter === cat.slug ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              onClick={() => handleFilterChange(cat.slug)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                activeFilter === cat.slug
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
               }`}
             >
               {cat.name}
@@ -43,46 +124,91 @@ All
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((project) => (
-              <motion.a
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                href={route('project.detail', { project: project.slug })}
-                className="group bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-indigo-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/5"
+        {filtered.length > 0 ? (
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeFilter}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="relative overflow-hidden aspect-video bg-gray-800">
-                  {project.thumbnail ? (
-                    <img
-                      src={`/storage/${project.thumbnail}`}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-600">
-                      <Image className="w-16 h-16" />
-                    </div>
-                  )}
-                  <span className="absolute top-3 left-3 bg-indigo-600/90 text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                    {project.category}
-                  </span>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-indigo-400 transition-colors">
-                    {project.title}
-                  </h3>
-                  {project.client && (
-                    <p className="text-sm text-gray-500">{project.client.name}</p>
-                  )}
-                </div>
-              </motion.a>
-            ))}
-          </AnimatePresence>
-        </div>
+                <Swiper
+                  ref={swiperRef}
+                  modules={[Navigation, Pagination, EffectCoverflow]}
+                  effect="coverflow"
+                  centeredSlides
+                  slidesPerView="auto"
+                  spaceBetween={20}
+                  loop={filtered.length >= 3}
+                  speed={600}
+                  grabCursor
+                  coverflowEffect={{
+                    rotate: 0,
+                    stretch: -10,
+                    depth: 200,
+                    modifier: 1,
+                    slideShadows: false,
+                  }}
+                  navigation={{
+                    prevEl: '.portfolio-prev',
+                    nextEl: '.portfolio-next',
+                  }}
+                  pagination={{
+                    el: '.portfolio-pagination',
+                    clickable: true,
+                    bulletClass: 'inline-block w-2 h-2 rounded-full bg-gray-600 mx-1 cursor-pointer transition-all duration-300',
+                    bulletActiveClass: '!bg-indigo-500 !w-6',
+                  }}
+                  breakpoints={{
+                    320: { slidesPerView: 1.15 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 2.5 },
+                    1280: { slidesPerView: 3 },
+                  }}
+                  onSlideChange={(swiper) => swiper.update()}
+                  className="!pb-14"
+                >
+                  {filtered.map((project) => (
+                    <SwiperSlide key={project.id} className="!h-auto">
+                      {({ isActive }) => (
+                        <ProjectCard project={project} isActive={isActive} />
+                      )}
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </motion.div>
+            </AnimatePresence>
+
+            {filtered.length > 2 && (
+              <>
+                <button
+                  onClick={goPrev}
+                  className="portfolio-prev absolute top-1/2 -left-2 lg:-left-6 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 backdrop-blur border border-white/10 flex items-center justify-center text-white hover:bg-white/20 hover:border-indigo-500/30 transition-all duration-300 shadow-lg"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={goNext}
+                  className="portfolio-next absolute top-1/2 -right-2 lg:-right-6 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 backdrop-blur border border-white/10 flex items-center justify-center text-white hover:bg-white/20 hover:border-indigo-500/30 transition-all duration-300 shadow-lg"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </>
+            )}
+            <div className="portfolio-pagination flex justify-center gap-1 mt-4" />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-20 text-gray-500"
+          >
+            <FolderOpen className="w-12 h-12 mb-3" />
+            <p className="text-sm">No projects in this category yet.</p>
+          </motion.div>
+        )}
 
         {projects.length >= 50 && (
           <div className="text-center mt-12">

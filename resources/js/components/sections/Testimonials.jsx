@@ -1,63 +1,188 @@
+import { useRef } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination, EffectCoverflow } from 'swiper/modules'
 import { motion } from 'framer-motion'
-import { Star } from 'lucide-react'
+import { Star, Quote } from 'lucide-react'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
+
+function TestimonialCard({ testimonial, isActive }) {
+  return (
+    <div
+      className={`relative rounded-2xl p-6 md:p-8 transition-all duration-700 ease-out ${
+        isActive
+          ? 'bg-gradient-to-br from-gray-900 to-gray-800 border border-indigo-500/30 shadow-2xl shadow-indigo-500/10 scale-100 opacity-100'
+          : 'bg-gray-900/60 border border-gray-800 scale-[0.85] opacity-40 blur-[1px]'
+      }`}
+    >
+      {isActive && (
+        <Quote className="absolute top-4 right-4 w-20 h-20 text-indigo-500/5 -rotate-12" />
+      )}
+
+      <div className="flex items-center gap-4 mb-6 relative z-10">
+        <div
+          className={`flex-shrink-0 rounded-full overflow-hidden transition-all duration-500 ${
+            isActive ? 'w-14 h-14 ring-2 ring-indigo-500/30 ring-offset-2 ring-offset-gray-900' : 'w-12 h-12'
+          }`}
+        >
+          {testimonial.avatar ? (
+            <img
+              src={`/storage/${testimonial.avatar}`}
+              alt={testimonial.client_name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-indigo-600/30 flex items-center justify-center text-white text-xl font-bold">
+              {testimonial.client_name.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div>
+          <h4 className={`font-semibold text-white transition-all duration-500 ${isActive ? 'text-base' : 'text-sm'}`}>
+            {testimonial.client_name}
+          </h4>
+          {testimonial.role && (
+            <p className="text-xs text-gray-500 mt-0.5">{testimonial.role}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex gap-0.5 mb-4 relative z-10">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={isActive ? { scale: 0, opacity: 0 } : false}
+            animate={isActive ? { scale: 1, opacity: 1 } : false}
+            transition={{ delay: isActive ? 0.2 + i * 0.08 : 0, type: 'spring', stiffness: 300 }}
+          >
+            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+          </motion.div>
+        ))}
+      </div>
+
+      <blockquote
+        className={`text-gray-400 leading-relaxed italic relative z-10 transition-all duration-500 ${
+          isActive ? 'text-sm md:text-base' : 'text-xs'
+        }`}
+      >
+        &ldquo;{testimonial.quote}&rdquo;
+      </blockquote>
+    </div>
+  )
+}
 
 export default function Testimonials({ testimonials }) {
+  const swiperRef = useRef(null)
+
   if (!testimonials || testimonials.length === 0) return null
 
+  const duplicated = testimonials.length < 4
+    ? [...testimonials, ...testimonials, ...testimonials]
+    : testimonials
+
   return (
-    <section id="testimonials" className="py-24 lg:py-32">
+    <section id="testimonials" className="py-24 lg:py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-14"
+        >
           <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What Our Clients Say</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Feedback from clients who have used our services.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, i) => (
-            <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 hover:border-indigo-500/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
-                  {testimonial.avatar ? (
-                    <img
-                      src={`/storage/${testimonial.avatar}`}
-                      alt={testimonial.client_name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-lg font-bold">
-                      {testimonial.client_name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-white">{testimonial.client_name}</h4>
-                  {testimonial.role && (
-                    <p className="text-xs text-gray-500">{testimonial.role}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-0.5 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-                ))}
-              </div>
-              <blockquote className="text-gray-400 text-sm leading-relaxed italic">
-                &ldquo;{testimonial.quote}&rdquo;
-              </blockquote>
-            </motion.div>
-          ))}
+        <div
+          className="relative"
+          onMouseEnter={() => swiperRef.current?.swiper?.autoplay?.stop()}
+          onMouseLeave={() => swiperRef.current?.swiper?.autoplay?.start()}
+        >
+          <Swiper
+            ref={swiperRef}
+            modules={[Autoplay, Pagination, EffectCoverflow]}
+            effect="coverflow"
+            centeredSlides
+            slidesPerView="auto"
+            spaceBetween={0}
+            loop={duplicated.length >= 3}
+            speed={800}
+            grabCursor
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: false,
+            }}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: -40,
+              depth: 300,
+              modifier: 1,
+              slideShadows: false,
+            }}
+            pagination={{
+              el: '.testimonial-pagination',
+              clickable: true,
+              renderBullet: (index, className) => {
+                return `<span class="${className} testimonial-bullet"></span>`
+              },
+            }}
+            breakpoints={{
+              320: { slidesPerView: 1.1 },
+              768: { slidesPerView: 1.8 },
+              1024: { slidesPerView: 2.5 },
+              1280: { slidesPerView: 3 },
+            }}
+            onSlideChange={(swiper) => swiper.update()}
+            className="!pb-16"
+          >
+            {(duplicated.length < 4 ? duplicated : testimonials).map((testimonial, idx) => (
+              <SwiperSlide key={`${testimonial.id}-${idx}`} className="!h-auto py-8">
+                {({ isActive }) => (
+                  <TestimonialCard testimonial={testimonial} isActive={isActive} />
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          <div className="testimonial-pagination flex justify-center gap-1.5 mt-2" />
         </div>
       </div>
+
+      <style>{`
+        .testimonial-bullet {
+          display: inline-block;
+          width: 36px;
+          height: 3px;
+          border-radius: 2px;
+          background: rgba(99, 102, 241, 0.2);
+          cursor: pointer;
+          transition: all 0.4s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        .testimonial-bullet::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: rgb(99, 102, 241);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 4s linear;
+        }
+        .testimonial-bullet.swiper-pagination-bullet-active::after {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+        .testimonial-bullet.swiper-pagination-bullet-active {
+          background: rgba(99, 102, 241, 0.3);
+          width: 48px;
+        }
+      `}</style>
     </section>
   )
 }
