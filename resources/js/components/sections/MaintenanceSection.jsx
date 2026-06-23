@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { route } from '@/lib/ziggy'
-import { CheckCircle, Shield, Server, Settings, BarChart3, Cloud, MessageCircle, ArrowRight, Zap } from 'lucide-react'
+import { Shield, Server, Settings, BarChart3, Cloud, MessageCircle, ArrowRight, Zap } from 'lucide-react'
 
 const features = [
   { icon: Shield, title: 'Free SSL Certificate', desc: 'Auto-renewing SSL to keep your site secure and trusted by browsers.' },
@@ -66,20 +66,20 @@ export default function MaintenanceSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <motion.div
-              key={hours}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white/5 border border-white/10 rounded-xl p-5 text-center"
-            >
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Freelancer / In-House IT</p>
-              <p className="text-3xl font-bold text-gray-400 line-through">RM {traditionalCost.toLocaleString()}</p>
-              <p className="text-xs text-gray-600 mt-1">{hours}h × RM 150/h</p>
-              <p className="text-[10px] text-gray-600 mt-3">Typical cost for hiring a freelance developer or maintaining an in-house IT team.</p>
-            </motion.div>
+              <motion.div
+                key={`traditional-${hours}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white/5 border border-white/10 rounded-xl p-5 text-center"
+              >
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Freelancer / In-House IT</p>
+                <p className="text-3xl font-bold text-gray-400 line-through">RM {traditionalCost.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 mt-1">{hours}h × RM 150/h</p>
+                <p className="text-[10px] text-gray-600 mt-3">Typical cost for hiring a freelance developer or maintaining an in-house IT team.</p>
+              </motion.div>
 
-            <motion.div
-              key={hours}
+              <motion.div
+                key={`webmy-${hours}`}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               className="bg-white/5 border border-indigo-500/50 rounded-xl p-5 text-center shadow-xl shadow-indigo-500/10 relative overflow-hidden"
