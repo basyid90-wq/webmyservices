@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { useState, useCallback } from 'react'
+import { Swiper, SwiperSlide, useSwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination, EffectCoverflow } from 'swiper/modules'
 import { motion } from 'framer-motion'
 import { Star, Quote } from 'lucide-react'
@@ -7,7 +7,9 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-coverflow'
 
-function TestimonialCard({ testimonial, isActive }) {
+function TestimonialSlide({ testimonial }) {
+  const { isActive } = useSwiperSlide()
+
   return (
     <div
       className={`relative rounded-2xl p-6 md:p-8 transition-all duration-700 ease-out ${
@@ -73,7 +75,10 @@ function TestimonialCard({ testimonial, isActive }) {
 }
 
 export default function Testimonials({ testimonials }) {
-  const swiperRef = useRef(null)
+  const [swiper, setSwiper] = useState(null)
+
+  const pause = useCallback(() => swiper?.autoplay?.stop(), [swiper])
+  const resume = useCallback(() => swiper?.autoplay?.start(), [swiper])
 
   if (!testimonials || testimonials.length === 0) return null
 
@@ -99,11 +104,11 @@ export default function Testimonials({ testimonials }) {
 
         <div
           className="relative"
-          onMouseEnter={() => swiperRef.current?.swiper?.autoplay?.stop()}
-          onMouseLeave={() => swiperRef.current?.swiper?.autoplay?.start()}
+          onMouseEnter={pause}
+          onMouseLeave={resume}
         >
           <Swiper
-            ref={swiperRef}
+            onSwiper={setSwiper}
             modules={[Autoplay, Pagination, EffectCoverflow]}
             effect="coverflow"
             centeredSlides
@@ -137,14 +142,11 @@ export default function Testimonials({ testimonials }) {
               1024: { slidesPerView: 2.5 },
               1280: { slidesPerView: 3 },
             }}
-            onSlideChange={(swiper) => swiper.update()}
             className="!pb-16"
           >
             {(duplicated.length < 4 ? duplicated : testimonials).map((testimonial, idx) => (
               <SwiperSlide key={`${testimonial.id}-${idx}`} className="!h-auto py-8">
-                {({ isActive }) => (
-                  <TestimonialCard testimonial={testimonial} isActive={isActive} />
-                )}
+                <TestimonialSlide testimonial={testimonial} />
               </SwiperSlide>
             ))}
           </Swiper>

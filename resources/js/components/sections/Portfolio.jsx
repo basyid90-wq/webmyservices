@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { useState, useCallback } from 'react'
+import { Swiper, SwiperSlide, useSwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Image, FolderOpen } from 'lucide-react'
@@ -9,24 +9,18 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-coverflow'
 
-function ProjectCard({ project, isActive }) {
+function PortfolioSlide({ project }) {
+  const { isActive } = useSwiperSlide()
+
   return (
-    <motion.a
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-      href={route('project.detail', { project: project.slug })}
-      className="block group"
+    <div
+      className={`relative overflow-hidden rounded-2xl bg-gray-900 border transition-all duration-500 ${
+        isActive
+          ? 'border-indigo-500/40 shadow-xl shadow-indigo-500/10 scale-100 opacity-100'
+          : 'border-gray-800 scale-[0.92] opacity-50 hover:opacity-80'
+      }`}
     >
-      <div
-        className={`relative overflow-hidden rounded-2xl bg-gray-900 border transition-all duration-500 ${
-          isActive
-            ? 'border-indigo-500/40 shadow-xl shadow-indigo-500/10 scale-100 opacity-100'
-            : 'border-gray-800 scale-[0.92] opacity-50 hover:opacity-80'
-        }`}
-      >
+      <a href={route('project.detail', { project: project.slug })} className="block group">
         <div className="relative overflow-hidden aspect-[16/10] bg-gray-800">
           {project.thumbnail ? (
             <img
@@ -43,11 +37,7 @@ function ProjectCard({ project, isActive }) {
             {project.category}
           </span>
           {isActive && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"
-            />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent" />
           )}
         </div>
         <div className="p-5">
@@ -58,27 +48,27 @@ function ProjectCard({ project, isActive }) {
             <p className="text-sm text-gray-500">{project.client.name}</p>
           )}
         </div>
-      </div>
-    </motion.a>
+      </a>
+    </div>
   )
 }
 
 export default function Portfolio({ projects, categories }) {
   const [activeFilter, setActiveFilter] = useState('all')
-  const swiperRef = useRef(null)
+  const [swiper, setSwiper] = useState(null)
 
   const filtered = activeFilter === 'all'
     ? projects
     : projects.filter((p) => p.category_slug === activeFilter)
 
-  const goNext = () => swiperRef.current?.swiper?.slideNext()
-  const goPrev = () => swiperRef.current?.swiper?.slidePrev()
+  const goNext = useCallback(() => swiper?.slideNext(), [swiper])
+  const goPrev = useCallback(() => swiper?.slidePrev(), [swiper])
 
   const handleFilterChange = (slug) => {
     setActiveFilter(slug)
     setTimeout(() => {
-      swiperRef.current?.swiper?.update()
-      swiperRef.current?.swiper?.slideTo(0, 300)
+      swiper?.update()
+      swiper?.slideTo(0, 300)
     }, 50)
   }
 
@@ -135,7 +125,7 @@ export default function Portfolio({ projects, categories }) {
                 transition={{ duration: 0.3 }}
               >
                 <Swiper
-                  ref={swiperRef}
+                  onSwiper={setSwiper}
                   modules={[Navigation, Pagination, EffectCoverflow]}
                   effect="coverflow"
                   centeredSlides
@@ -167,14 +157,11 @@ export default function Portfolio({ projects, categories }) {
                     1024: { slidesPerView: 2.5 },
                     1280: { slidesPerView: 3 },
                   }}
-                  onSlideChange={(swiper) => swiper.update()}
                   className="!pb-14"
                 >
                   {filtered.map((project) => (
                     <SwiperSlide key={project.id} className="!h-auto">
-                      {({ isActive }) => (
-                        <ProjectCard project={project} isActive={isActive} />
-                      )}
+                      <PortfolioSlide project={project} />
                     </SwiperSlide>
                   ))}
                 </Swiper>
