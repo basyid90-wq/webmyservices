@@ -25,12 +25,19 @@ class TelegramChannel
         $text = is_array($message) ? ($message['text'] ?? '') : (string) $message;
 
         try {
-            Http::timeout(5)->post("https://api.telegram.org/bot{$token}/sendMessage", [
+            $response = Http::timeout(5)->post("https://api.telegram.org/bot{$token}/sendMessage", [
                 'chat_id' => $chatId,
                 'text' => $text,
                 'parse_mode' => 'Markdown',
                 'disable_web_page_preview' => true,
             ]);
+
+            if (!$response->json('ok')) {
+                Log::error('Telegram API rejected message: ' . ($response->json('description') ?? 'Unknown error'), [
+                    'text' => $text,
+                    'error_code' => $response->json('error_code'),
+                ]);
+            }
         } catch (\Throwable $e) {
             Log::error('Telegram notification failed: ' . $e->getMessage());
         }
