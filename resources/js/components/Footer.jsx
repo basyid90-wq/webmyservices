@@ -81,7 +81,7 @@ export default function Footer({ onCookieSettings }) {
             <h4 className="text-sm font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-2.5">
               <li><a href="#portfolio" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Portfolio</a></li>
-              <li><a href={route('maintenance')} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Maintenance</a></li>
+              <li><a href="/#maintenance" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Maintenance</a></li>
               <li><a href="#faq" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">FAQ</a></li>
               <li><a href={route('contact')} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li>
               <li><a href={route('terms')} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Terms</a></li>
