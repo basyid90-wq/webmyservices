@@ -59,7 +59,11 @@ class HomeController extends Controller
 
         \App\Models\Contact::create($validated);
 
-        User::first()?->notify(new NewInquiry('contact', $validated['name'], $validated['subject']));
+        try {
+            User::first()?->notify(new NewInquiry('contact', $validated['name'], $validated['subject']));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('contact notification failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        }
 
         return redirect()->route('contact')->with('success', 'Thank you! Your message has been sent.');
     }
@@ -89,7 +93,11 @@ class HomeController extends Controller
 
         \Illuminate\Support\Facades\Log::info('pricingInquiry saved successfully');
 
-        User::first()?->notify(new NewInquiry('pricing', $validated['name'], $validated['plan_name'], $validated['company_name'] ?? ''));
+        try {
+            User::first()?->notify(new NewInquiry('pricing', $validated['name'], $validated['plan_name'], $validated['company_name'] ?? ''));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('pricingInquiry notification failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        }
 
         return response()->json(['success' => true]);
     }

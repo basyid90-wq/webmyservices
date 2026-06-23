@@ -31,7 +31,7 @@ class TelegramChannel
                 'parse_mode' => 'Markdown',
                 'disable_web_page_preview' => true,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Telegram notification failed: ' . $e->getMessage());
         }
     }

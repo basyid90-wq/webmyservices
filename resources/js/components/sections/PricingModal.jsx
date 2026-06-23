@@ -119,6 +119,8 @@ export default function PricingModal({ plan, isOpen, onClose }) {
           }
         })
         setErrors(serverErrors)
+      } else {
+        setErrors({ _form: err.response?.data?.message || 'Server error. Please try again later.' })
       }
     } finally {
       setSending(false)
@@ -209,6 +211,11 @@ export default function PricingModal({ plan, isOpen, onClose }) {
               </div>
 
               <div className="p-6 md:p-8 space-y-6">
+                {errors._form && (
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
+                    <p className="text-sm text-red-400">{errors._form}</p>
+                  </div>
+                )}
                 <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-lg px-4 py-3">
                   <p className="text-sm text-indigo-300">
                     Selected Plan: <span className="font-semibold text-white">{plan?.name}</span> — RM{plan?.price}
