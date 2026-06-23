@@ -29,7 +29,7 @@ Route::post('/documents/{document}/convert', [DocumentController::class, 'conver
 
 Route::get('/terms', function () { return Inertia::render('Terms'); })->name('terms');
 Route::get('/privacy', function () { return Inertia::render('Privacy'); })->name('privacy');
-Route::get('/maintenance', function () { return Inertia::render('Maintenance'); })->name('maintenance');
+Route::redirect('/maintenance', '/#maintenance', 301);
 
 Route::get('/booking', [BookingController::class, 'catalog'])->name('booking.catalog');
 Route::get('/booking/room/{room:slug}', [BookingController::class, 'room'])->name('booking.room');
