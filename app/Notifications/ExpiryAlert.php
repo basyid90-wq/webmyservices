@@ -32,7 +32,8 @@ class ExpiryAlert extends Notification
             'hosting_critical' => "Hosting {$this->itemName} TELAH TAMAT",
             'hosting_warning' => "SEGERA: Hosting {$this->itemName} tamat dalam 7 hari",
             'hosting_soon' => "Hosting {$this->itemName} tamat pada {$this->expiryDate}",
-            'plugin' => "Plugin WordPress {$this->clientName} tidak dikemaskini > 40 hari",
+            'plugin_30' => "Plugin WordPress {$this->clientName} tidak dikemaskini > 30 hari",
+            'plugin_40' => "Plugin WordPress {$this->clientName} tidak dikemaskini > 40 hari",
         ];
 
         return [
