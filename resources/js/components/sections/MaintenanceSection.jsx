@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { route } from '@/lib/ziggy'
-import { Shield, Server, Settings, BarChart3, Cloud, MessageCircle, ArrowRight, Zap } from 'lucide-react'
+import { Shield, Server, Settings, BarChart3, Cloud, MessageCircle, Zap } from 'lucide-react'
 
 const features = [
   { icon: Shield, title: 'Free SSL Certificate', desc: 'Auto-renewing SSL to keep your site secure and trusted by browsers.' },
@@ -131,17 +130,6 @@ export default function MaintenanceSection() {
               </motion.div>
             ))}
           </div>
-        </div>
-
-        <div className="text-center">
-          <a
-            href={route('contact')}
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20"
-          >
-            Contact Us Now
-            <ArrowRight className="w-4 h-4" />
-          </a>
-          <p className="text-xs text-gray-600 mt-3">No commitment. Free consultation included.</p>
         </div>
       </div>
     </section>
