@@ -267,11 +267,11 @@
 <body onload="window.print()">
 
     <div class="receipt-page">
-        <img src="{{ asset('images/logo-putih.png') }}" class="watermark" alt="Watermark">
+        <img src="{{ asset('images/barakah-transport-logo.jpg') }}" class="watermark" alt="Watermark">
 
         <header class="header">
             <div class="logo-section">
-                <img src="{{ asset('images/logo-putih.png') }}" alt="Logo">
+                <img src="{{ asset('images/barakah-transport-logo.jpg') }}" alt="Logo">
             </div>
             <div class="company-details">
                 <h1 class="company-name">Barakah Transport & Cengal Homestay</h1>

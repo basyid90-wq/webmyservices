@@ -45,7 +45,7 @@
 <body>
 
     <div class="header">
-        <div class="logo">&nbsp;</div>
+        <div class="logo"><img src="{{ public_path('images/barakah-transport-logo.jpg') }}" width="140" alt="Logo"></div>
         <div class="company">
             <div class="company-name">Barakah Transport & Cengal Homestay</div>
             <div class="company-sub">32300 Pulau Pangkor, Perak, Malaysia<br>Telefon: 013-463 2056<br>Email: admin@barakahtransport.com</div>
