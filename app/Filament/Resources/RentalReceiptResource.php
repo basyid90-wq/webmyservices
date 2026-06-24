@@ -184,7 +184,7 @@ class RentalReceiptResource extends Resource
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Bayaran')
                     ->badge()
-                    ->formatStateUsing(fn ($s) => match($s) { 'cash' => 'Tunai', 'transfer' => 'Transfer', default => $s }),
+                    ->formatStateUsing(fn (string $state): string => match($state) { 'cash' => 'Tunai', 'transfer' => 'Transfer', 'card' => 'Kad', default => $state }),
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('Jumlah')
                     ->money('MYR')
