@@ -4,6 +4,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\RentalReceiptController;
 use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,7 +26,10 @@ Route::post('/pricing-inquiry', [HomeController::class, 'pricingInquiry'])->name
 
 Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'download'])->name('invoices.pdf');
 Route::get('/documents/{document}/print', [DocumentController::class, 'print'])->name('documents.print');
-Route::post('/documents/{document}/convert', [DocumentController::class, 'convert'])->name('documents.convert');
+Route::get('/documents/{document}/convert', [DocumentController::class, 'convert'])->name('documents.convert');
+
+Route::get('/rental/{rentalReceipt}/pdf', [RentalReceiptController::class, 'download'])->name('rental.download');
+Route::get('/rental/{rentalReceipt}/print', [RentalReceiptController::class, 'print'])->name('rental.print');
 
 Route::get('/terms', function () { return Inertia::render('Terms'); })->name('terms');
 Route::get('/privacy', function () { return Inertia::render('Privacy'); })->name('privacy');

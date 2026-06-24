@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->navigationGroups([
                 'Client Management',
+                'Barakah Transport',
                 'Frontend',
                 'Shop (Demo)',
                 'Booking (Demo)',
