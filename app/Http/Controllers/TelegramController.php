@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Telegram\StatusCommand;
 use App\Services\Telegram\InvoiceCommand;
+use App\Services\Telegram\NlpReceiptCommand;
 use App\Services\Telegram\StatsCommand;
+use App\Services\Telegram\StatusCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -34,6 +35,9 @@ class TelegramController extends Controller
             if ($handler->authorize()) {
                 $handler->execute();
             }
+        } else {
+            // Plain text — bukan arahan. Hantar ke NLP pipeline.
+            (new NlpReceiptCommand($chatId))->execute($text);
         }
 
         // Always return 200 to Telegram
@@ -42,6 +46,10 @@ class TelegramController extends Controller
 
     private function parseCommand(string $text): array
     {
+        if (!str_starts_with($text, '/')) {
+            return ['command' => '', 'argument' => ''];
+        }
+
         $text = ltrim($text, '/');
         $parts = explode(' ', $text, 2);
         return [
@@ -53,7 +61,7 @@ class TelegramController extends Controller
     private function resolveCommand(string $command, string $argument, int $chatId): ?object
     {
         return match ($command) {
-            'status' => new StatusCommand($argument, $chatId),
+            'status', 's' => new StatusCommand($argument, $chatId),
             'inv', 'invoice' => new InvoiceCommand($argument, $chatId),
             'stats' => new StatsCommand('', $chatId),
             'start' => $this->startReply($chatId),
@@ -66,11 +74,15 @@ class TelegramController extends Controller
         $lines = [
             "🤖 *WebMy Services Bot*",
             "",
-            "Arahan tersedia:",
+            "Arahan:",
             "",
             "📌 `/status [nama]` — Semak status client",
             "🧾 `/inv buat [id]` — Jana invois & hantar PDF",
             "📊 `/stats` — Ringkasan dashboard",
+            "",
+            "🤖 Atau hantar mesej biasa untuk jana resit sewaan Barakah Transport secara automatik!",
+            "",
+            "Contoh: `22-23/4/2026 Masrina +6018-2384123 2 Skuter rm80`",
         ];
 
         $token = config('telegram.bot_token');
