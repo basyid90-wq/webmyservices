@@ -1,61 +1,55 @@
-<!doctype html>
-<html lang="ms">
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8">
-    <title>{{ $receipt->receipt_number }}</title>
+    <title>Resit: {{ $receipt->receipt_number }}</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; line-height: 1.5; color: #1a1a2e; padding: 0; }
+        body { font-family: sans-serif; font-size: 13px; line-height: 1.45; color: #333; margin: 0; padding: 20px; }
         @page { size: A5; margin: 16px; }
 
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #f0ad4e; padding-bottom: 12px; }
-        .header h1 { font-size: 20px; font-weight: 800; color: #d35400; margin-bottom: 2px; }
-        .header p { font-size: 10px; color: #666; }
+        .header { text-align: center; margin-bottom: 28px; border-bottom: 2px solid #eee; padding-bottom: 18px; }
+        .logo { font-size: 22px; font-weight: bold; color: #556ee6; margin-bottom: 4px; }
+        .company-info { font-size: 11px; color: #555; }
 
-        .title { text-align: center; margin-bottom: 16px; }
-        .title span { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #d35400; border: 2px solid #d35400; padding: 4px 24px; border-radius: 4px; }
+        .receipt-info { margin-bottom: 28px; overflow: hidden; }
+        .receipt-title { float: right; font-size: 16px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .info-left { float: left; width: 50%; }
+        .info-right { float: right; width: 40%; text-align: right; }
+        .info-left strong, .info-right strong { display: block; margin-bottom: 2px; }
 
-        .info { display: flex; gap: 16px; margin-bottom: 16px; }
-        .info .left { flex: 1; }
-        .info .right { text-align: right; font-size: 10px; }
-        .info .left strong { font-size: 10px; text-transform: uppercase; color: #999; display: block; margin-bottom: 2px; }
-        .info .left span { display: block; font-size: 13px; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+        th { background: #f8f9fa; padding: 9px 10px; text-align: left; border-bottom: 2px solid #ddd; font-size: 11px; text-transform: uppercase; color: #666; }
+        td { padding: 9px 10px; border-bottom: 1px solid #eee; font-size: 12px; vertical-align: top; }
+        tfoot td { padding: 10px; }
+        .total-row td { font-weight: bold; font-size: 15px; border-top: 2px solid #ddd; background: #fffbe6; }
 
-        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-        thead th { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #999; padding: 8px 6px; border-bottom: 2px solid #f0ad4e; text-align: left; }
-        thead th:last-child { text-align: right; }
-        tbody td { padding: 8px 6px; font-size: 11px; border-bottom: 1px solid #eee; vertical-align: top; }
-        tbody td:last-child { text-align: right; font-weight: 600; }
-        tbody td .label { font-size: 9px; color: #888; }
-        tbody td .value { font-weight: 600; font-size: 13px; }
-
-        .totals { border-top: 2px solid #f0ad4e; padding-top: 8px; }
-        .totals .row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; }
-        .totals .row.total { font-size: 16px; font-weight: 800; color: #d35400; border-bottom: 2px solid #d35400; padding-bottom: 6px; }
-        .totals .row.balance { margin-top: 8px; font-size: 14px; font-weight: 700; }
-
-        .footer { margin-top: 24px; text-align: center; font-size: 9px; color: #aaa; border-top: 1px solid #eee; padding-top: 8px; }
+        .disclaimer { margin-top: 40px; font-size: 11px; color: #888; }
+        .footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 8px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BARAKAH TRANSPORT</h1>
-        <p>No. 123, Jalan Contoh, 50000 Kuala Lumpur | +60 12-345 6789 | admin@barakahtransport.com</p>
+        <div class="logo">BARAKAH TRANSPORT</div>
+        <div class="company-info">
+            No. 123, Jalan Contoh, 50000 Kuala Lumpur<br>
+            Tel: +60 12-345 6789 | Email: admin@barakahtransport.com
+        </div>
     </div>
 
-    <div class="title"><span>Resit Rasmi</span></div>
+    <div class="receipt-info">
+        <div class="receipt-title">RESIT RASMI</div>
 
-    <div class="info">
-        <div class="left">
-            <strong>Kepada</strong>
-            <span>{{ $receipt->customer_name }}</span>
-            <span style="font-weight:400;font-size:11px;">{{ $receipt->customer_phone }}</span>
+        <div class="info-left">
+            <strong>KEPADA:</strong>
+            {{ $receipt->customer_name }}<br>
+            {{ $receipt->customer_phone }}
         </div>
-        <div class="right">
-            <strong style="color:#999;">No. Resit:</strong> {{ $receipt->receipt_number }}<br>
-            <strong style="color:#999;">Tarikh:</strong> {{ $receipt->created_at->format('d/m/Y') }}<br>
-            <strong style="color:#999;">Bayaran:</strong> {{ match($receipt->payment_method) { 'cash' => 'Tunai', 'transfer' => 'Bank Transfer', 'card' => 'Kad', default => $receipt->payment_method } }}
+
+        <div class="info-right">
+            <strong>No. Resit:</strong> {{ $receipt->receipt_number }}<br>
+            <strong>Tarikh:</strong> {{ $receipt->created_at->format('d/m/Y') }}<br>
+            <strong>Bayaran:</strong> {{ match($receipt->payment_method) { 'cash' => 'Tunai', 'transfer' => 'Bank Transfer', 'card' => 'Kad', default => $receipt->payment_method } }}
         </div>
     </div>
 
@@ -64,7 +58,7 @@
             <tr>
                 <th>Perihal</th>
                 <th style="text-align:center">Tempoh</th>
-                <th style="text-align:center">Harga</th>
+                <th style="text-align:right">Harga Sehari</th>
                 <th style="text-align:right">Jumlah</th>
             </tr>
         </thead>
@@ -72,27 +66,45 @@
             @foreach($receipt->items as $item)
             <tr>
                 <td>
-                    <div class="value">Sewaan {{ ucfirst($item->category) }}</div>
-                    <div class="label">Model: {{ $item->model_unit }}</div>
-                    @if($item->quantity > 1)<div class="label">Kuantiti: {{ $item->quantity }}</div>@endif
-                    <div class="label">{{ $item->start_date->format('d/m/Y') }} → {{ $item->end_date->format('d/m/Y') }}</div>
+                    <strong>Sewaan {{ ucfirst($item->category) }}</strong><br>
+                    Model/Unit: {{ $item->model_unit }}<br>
+                    <small>Dari {{ $item->start_date->format('d/m/Y') }} hingga {{ $item->end_date->format('d/m/Y') }}</small>
                 </td>
                 <td style="text-align:center">{{ $item->duration_days }} Hari</td>
-                <td style="text-align:center">{{ number_format($item->price_per_day, 2) }}{{ $item->price_type === 'flat' ? ' (Tetap)' : '' }}</td>
+                <td style="text-align:right">
+                    {{ number_format($item->price_per_day, 2) }}
+                    @if($item->price_type == 'flat')
+                        (Tetap)
+                    @elseif($item->quantity > 1)
+                        (x{{ $item->quantity }})
+                    @endif
+                </td>
                 <td style="text-align:right">{{ number_format($item->total_price, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align:right"><strong>Jumlah Keseluruhan (MYR)</strong></td>
+                <td style="text-align:right"><strong>{{ number_format($receipt->total_amount, 2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align:right">Deposit Dibayar</td>
+                <td style="text-align:right">- {{ number_format($receipt->deposit_amount, 2) }}</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align:right">Baki Perlu Dibayar</td>
+                <td style="text-align:right">{{ number_format($receipt->balance_amount, 2) }}</td>
+            </tr>
+        </tfoot>
     </table>
 
-    <div class="totals">
-        <div class="row"><span>Jumlah Keseluruhan</span><span>RM {{ number_format($receipt->total_amount, 2) }}</span></div>
-        <div class="row"><span>Deposit Dibayar</span><span>- RM {{ number_format($receipt->deposit_amount, 2) }}</span></div>
-        <div class="row balance"><span>BAKI PERLU DIBAYAR</span><span>RM {{ number_format($receipt->balance_amount, 2) }}</span></div>
+    <div class="disclaimer">
+        <em>Resit ini adalah cetakan komputer dan tidak memerlukan tandatangan.</em>
     </div>
 
     <div class="footer">
-        Resit ini adalah cetakan komputer dan tidak memerlukan tandatangan. | Dicetak: {{ date('d/m/Y H:i') }}
+        Dicetak pada {{ date('d/m/Y H:i:s') }}
     </div>
 
 </body>
