@@ -10,7 +10,7 @@ class RentalReceiptController extends Controller
     public function download(RentalReceipt $rentalReceipt)
     {
         $rentalReceipt->load('items');
-        $pdf = Pdf::loadView('pdf.rental-receipt', ['receipt' => $rentalReceipt]);
+        $pdf = Pdf::loadView('pdf.rental-receipt-dompdf', ['receipt' => $rentalReceipt]);
         return $pdf->download("{$rentalReceipt->receipt_number}.pdf");
     }
 
