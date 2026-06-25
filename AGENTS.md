@@ -85,6 +85,62 @@ Sebelum guna mana-mana library/framework/package dalam code, **WAJIB rujuk dokum
 - Run `php artisan optimize:clear` untuk backend changes
 - Test flow dari user perspective secara mental
 
+### 9. ERROR DEBUGGING PROTOCOL
+Setiap kali berlaku error atau bug, agent **WAJIB** ikut format ini:
+
+**Format laporan error:**
+```
+❌ Error: [jenis error - syntax/runtime/logic]
+📁 Fail: [file path]:[line number]
+🔍 Punca: [1 ayat sebab error]
+✅ Fix: [1 penyelesaian terbaik sahaja]
+```
+
+**Peraturan:**
+- Wajib tunjuk **file path + line number** yang tepat (`app/Http/Controllers/HomeController.php:45`)
+- Hanya beri **1 penyelesaian terbaik** — jangan bagi 3 pilihan dan suruh aku pilih. Buat keputusan sendiri berdasarkan codebase dan best practice.
+- Kalau error dari log Laravel, baca file `storage/logs/laravel.log` dulu sebelum bagi fix.
+- Kalau error dari browser (JS), reproduce flow secara mental dulu sebelum debug.
+- JANGAN spin up server/dev server untuk reproduce error kecuali diminta.
+- Bila fix dah dibuat, verify dengan check file sekeliling untuk pastikan takde side effect.
+
+### 10. CONTEXT REFRESH SIGNAL
+Bila perbualan dah panjang (>10 messages) atau lepas selesai satu task besar, agent **WAJIB** bagi summary ringkas dalam format ni sebelum terus ke task seterusnya:
+
+```
+📋 STATUS SEMASA
+✅ Selesai:
+  - [task 1 yang dah siap]
+  - [task 2 yang dah siap]
+
+🔄 Sedang:
+  - [task yang tengah dikerjakan sekarang]
+
+⏳ Pending:
+  - [task belum start]
+  - [task yang block sebab tunggu input]
+```
+
+**Peraturan:**
+- Format ni wajib guna emoji dan struktur di atas. Jangan guna format lain.
+- Jangan ulang konteks yang semua orang dah tahu — fokus pada apa yang berubah.
+- Kalau takde item untuk satu kategori, tulis `(tiada)`.
+- Summary ni mesti dihantar SEBELUM mula task baru, bukan selepas.
+
+### 11. FORBIDDEN ACTIONS
+Agent **DILARANG KERAS** melakukan perkara berikut tanpa kebenaran eksplisit:
+
+| # | Tindakan Terlarang | Sebab |
+|---|-------------------|-------|
+| 11.1 | **Delete migration** | Merosakkan sejarah database. Kalau nak rollback, guna `php artisan migrate:rollback` atau buat migration baru untuk undo. |
+| 11.2 | **Edit `.env` secara terus** | Boleh bocor credential dalam git history. Kalau perlu ubah, beritahu dulu dan suruh aku edit sendiri. Kecuali `.env.example` — tu boleh edit untuk dokumentasi environment variable. |
+| 11.3 | **Ubah logic yang dah working kalau tak berkaitan** | Kalau task kau cuma tukar UI button, jangan refactor query Eloquent yang dah berfungsi. Scope creep bahaya. |
+| 11.4 | **Install package baru tanpa tanya dulu** | Dah disebut di Rule #3, tapi penting untuk diulang. Mana-mana `composer require` atau `npm install` WAJIB dapat greenlight dulu. |
+| 11.5 | **Commit credentials atau API key** | Sebelum commit, WAJIB scan diff untuk pastikan takde password, API key, token, atau secret dalam code. Guna environment variable atau config file. |
+| 11.6 | **Force push / `git push --force`** | Jangan sesekali. Kalau conflict, resolve secara normal. |
+| 11.7 | **Drop table atau database** | Jangan guna `DROP TABLE`, `DROP DATABASE`, atau migration dengan `down()` yang destructive kecuali diminta spesifik. |
+| 11.8 | **Tukar `.gitignore` untuk track file yang sepatutnya diabaikan** | `/vendor`, `/node_modules`, `.env`, `/storage`, `*.log` mesti kekal dalam `.gitignore`. |
+
 ---
 
-*Last updated: 22 Jun 2026*
+*Last updated: 25 Jun 2026*
