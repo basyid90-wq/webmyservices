@@ -22,9 +22,9 @@ class NlpReceiptCommand extends BaseCommand
         $this->reply('⏳ Memproses mesej anda... Sila tunggu sebentar.');
 
         $ai = new DeepSeekAIService;
-        $data = $ai->parseReceipt($rawText);
+        $receipts = $ai->parseReceipts($rawText);
 
-        if (!$data) {
+        if (!$receipts) {
             $this->reply(
                 "❌ Maaf, tidak dapat memahami mesej.\n\n"
                 . "Sila hantar dalam format seperti:\n"
@@ -35,12 +35,28 @@ class NlpReceiptCommand extends BaseCommand
             return;
         }
 
-        // Validasi minimum
-        if (empty($data['customer_name']) || empty($data['customer_phone']) || empty($data['items'])) {
-            $this->reply("❌ Data tidak lengkap. Pastikan ada nama, nombor telefon, dan item sewaan.");
-            return;
+        $total = count($receipts);
+        $failed = [];
+
+        foreach ($receipts as $index => $data) {
+            if (empty($data['customer_name']) || empty($data['customer_phone']) || empty($data['items'])) {
+                $failed[] = $data['customer_name'] ?? "Entri #" . ($index + 1);
+                continue;
+            }
+
+            $this->createAndSendReceipt($data, $total > 1 ? $index + 1 : null, $total);
         }
 
+        if (!empty($failed)) {
+            $this->reply(
+                "⚠️ Data tidak lengkap untuk: " . implode(', ', $failed) . "\n"
+                . "Pastikan ada nama, nombor telefon, dan item sewaan."
+            );
+        }
+    }
+
+    private function createAndSendReceipt(array $data, ?int $position, int $total): void
+    {
         // Cipta RentalReceipt
         $receipt = RentalReceipt::create([
             'customer_name' => $data['customer_name'],
@@ -66,7 +82,7 @@ class NlpReceiptCommand extends BaseCommand
         file_put_contents($filePath, $pdf->output());
 
         // Hantar PDF ke Telegram
-        $caption = "✅ *Resit Dijana*\n\n"
+        $caption = "✅ *Resit Dijana*" . ($position ? " ({$position}/{$total})" : '') . "\n\n"
                  . "📄 {$receipt->receipt_number}\n"
                  . "👤 {$receipt->customer_name}\n"
                  . "📞 {$receipt->customer_phone}\n";

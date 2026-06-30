@@ -235,6 +235,7 @@ class DocumentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('print')
                     ->label('Print')
                     ->icon('heroicon-o-printer')

@@ -83,7 +83,7 @@ Accessible at `/admin`. Navigation groups:
 |----------|-------|-------------|
 | **Clients** | `Client` | Full CRUD with comprehensive fields: name, company, PIC, email, phone, website, address, logo, website type, domain details (name, provider, login, cost/sell price, dates), hosting details (name, provider, login, cost/sell price, dates), WP credentials, renew status, subscription active toggle |
 | **Invoices** | `Invoice` | CRUD with invoice number (auto), client, project (optional), dates, status (draft/sent/paid/overdue/cancelled), tax, discount, notes. Has repeater for invoice items. PDF download via DomPDF. |
-| **Documents** | `Document` | CRUD for quotes, invoices, receipts with auto-generated document numbers. Supports document type conversion (quote→invoice→receipt). Items repeater. Print view. |
+| **Documents** | `Document` | CRUD for quotes, invoices, receipts with auto-generated document numbers. Supports document type conversion (quote→invoice→receipt). Items repeater. Print view. Table row actions: Edit, Delete, Print, Convert. Bulk delete available. |
 
 #### 3.3 Shop Group
 | Resource | Model | Description |
